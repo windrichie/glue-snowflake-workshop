@@ -4,7 +4,7 @@ This repository contains step-by-step guide on how to set-up AWS Glue connector 
 
 ## Pre-requisites:
 
-Complete Lab 01: Working with Glue Data Catalog > Using AWS Console from Glue Immersion Day workshop. This lab assumes that the Glue table `console_csv` in Glue database `console_glueworkshop` are present in your AWS account.
+Complete Lab 01: Working with Glue Data Catalog > Using AWS Console from [Glue Immersion Day workshop](https://catalog.us-east-1.prod.workshops.aws/workshops/ee59d21b-4cb8-4b3d-a629-24537cf37bb5/en-US). This lab assumes that the Glue table `console_csv` in Glue database `console_glueworkshop` are present in your AWS account.
 
 ## Snowflake Set-up
 
@@ -52,3 +52,23 @@ Follow the below steps to complete the setup:
 1. Go back to the Glue create connector console, and choose the VPC ID and subnet ID that you took note of above. For security groups, you can choose the `default` security group. Then, click **Next**.
     ![](images/glue-create-connector-2.png)
 1. Leave `Snowflake connection` as the name, and click **Next** and then **Create connection**.
+
+
+### Create an AWS Glue ETL job using Glue Studio
+
+1. From the Glue console, go to ETL jobs > Visual ETL in the left navbar. Click **Visual ETL** under the "Create job" section.
+1. The Glue Studio window will appear. Go to **Job details** tab, and fill in the following parameters:
+    - Name: `glue-snowflake-etl`
+    - IAM Role: choose the pre-created IAM role (it should be named `AWSGlueServiceRole-glueworkshop`)
+    Leave the rest as default.
+    ![](images/glue-create-job-1.png)
+
+1. Go back to the **Visual** tab, and click the **+** button. For the first node, Choose `AWS Glue Data Catalog` and click on the node. Choose `console_glueworkshop` for the Database, `console_csv` for the Table.
+    ![](images/glue-create-job-2.png)
+
+1. Click the **+** button again to create another node. Under **Transforms** choose `Drop Fields`. Choose the columns `unit cost`, `total cost` and `total profit` to drop. This is to simulate the case where you would want to remove the profit-related values which may be sensitive.
+    ![](images/glue-create-job-3.png)
+
+1. Click the **+** button again to create another node. Under **Targets** choose `Snowflake`. Choose the Snowflake connection you created previously, and fill in `xx` for database, and `xx` for schema.
+
+1. Click **Save** and then click **Run**.
