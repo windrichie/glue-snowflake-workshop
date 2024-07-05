@@ -5,7 +5,7 @@ This repository contains step-by-step guide on how to set-up AWS Glue connector 
 ## Table of contents
 1. [Pre-requisites](#pre-requisites)
 1. [Snowflake Set-up](#snowflake-set-up)
-1. [AWS Set-up](#aws-setup)
+1. [AWS Set-up](#aws-set-up)
 1. [Validate the ETL job completion](#validate-the-etl-job-completion)
 
 ## Pre-requisites
