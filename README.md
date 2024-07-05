@@ -10,7 +10,7 @@ Complete Lab 01: Working with Glue Data Catalog > Using AWS Console from Glue Im
 
 In a new browser tab, go to http://signup.snowflake.com/ and sign-up for a new account. Ensure that you choose **Enterprise** for the "Choose your Snowflake edition" question and **AWS** for the "Choose your cloud provider" question.
 
-    ![](images/snowflake-signup.png)
+![](images/snowflake-signup.png)
 
 After registering, you will receive an email with an activation link and your Snowflake Account URL. Open a browser window, enter the URL of your Snowflake Account and sign in to the account.
 
