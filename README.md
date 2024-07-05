@@ -2,11 +2,17 @@
 
 This repository contains step-by-step guide on how to set-up AWS Glue connector for Snowflake and a sample ETL job that uses this connector.
 
-## Pre-requisites:
+## Table of contents
+1. [Pre-requisites](#prereq)
+1. [Snowflake Set-up](#snowflake-setup)
+1. [AWS Set-up](#aws-setup)
+1. [Validate the ETL job completion](#validate)
+
+## Pre-requisites: <a name="prereq"></a>
 
 Complete Lab 01: Working with Glue Data Catalog > Using AWS Console from [Glue Immersion Day workshop](https://catalog.us-east-1.prod.workshops.aws/workshops/ee59d21b-4cb8-4b3d-a629-24537cf37bb5/en-US). This lab assumes that the Glue table `console_csv` in Glue database `console_glueworkshop` are present in your AWS account.
 
-## Snowflake Set-up
+## Snowflake Set-up <a name="snowflake-setup"></a>
 
 In a new browser tab, go to http://signup.snowflake.com/ and sign-up for a new account. Ensure that you choose **Enterprise** for the "Choose your Snowflake edition" question and **AWS** for the "Choose your cloud provider" question.
 
@@ -22,7 +28,7 @@ Follow the below steps to complete the setup:
 
     ![](images/snowflake-account-url.png)
 
-## AWS Glue Set-up
+## AWS Set-up <a name="aws-setup"></a>
 
 ### Create a secret in AWS Secrets Manager
 
@@ -38,6 +44,11 @@ Follow the below steps to complete the setup:
 
     ![](images/sm-create-secret-2.png)
 
+### Grant Glue service role permissions to the Secret
+
+1. In your AWS console, go to AWS IAM and click on **Roles** from the left navbar. Search for `AWSGlueServiceRole-glueworkshop` and click into it.
+1. Click **Add permissions** dropdown, and choose **Attach policies**. Search for `SecretsManagerReadWrite` and attach the policy to the role by clicking **Add permissions**. This will allow the Glue service role permission to retrieve the secret values you created in the previous step.
+    ![](images/iam-attach-sm-policy.png)
 
 ### Create AWS Glue connector for Snowflake
 
@@ -49,7 +60,7 @@ Follow the below steps to complete the setup:
     ![](images/vpcs.png)
 1. Go to Subnets in the left navbar, filter by the `glueworkshop` VPC and take note of the Subnet ID with the name `MWAAEnvironment Private Subnet (AZ1)`.
     ![](images/subnets.png)
-1. Go back to the Glue create connector console, and choose the VPC ID and subnet ID that you took note of above. For security groups, you can choose the `default` security group. Then, click **Next**.
+1. Go back to the Glue create connector console, and choose the VPC ID and subnet ID that you took note of above. For security groups, you can choose the security group that starts with `glueimmersionday-workshopstudio-v1-DefaultVPCSecurityGroup`. Then, click **Next**.
     ![](images/glue-create-connector-2.png)
 1. Leave `Snowflake connection` as the name, and click **Next** and then **Create connection**.
 
@@ -66,9 +77,40 @@ Follow the below steps to complete the setup:
 1. Go back to the **Visual** tab, and click the **+** button. For the first node, Choose `AWS Glue Data Catalog` and click on the node. Choose `console_glueworkshop` for the Database, `console_csv` for the Table.
     ![](images/glue-create-job-2.png)
 
-1. Click the **+** button again to create another node. Under **Transforms** choose `Drop Fields`. Choose the columns `unit cost`, `total cost` and `total profit` to drop. This is to simulate the case where you would want to remove the profit-related values which may be sensitive.
+1. Click the **+** button to create another node. Under **Transforms** choose `Drop Fields`. Choose the columns `unit cost`, `total cost` and `total profit` to drop. This is to simulate the case where you would want to remove the profit-related values which may be sensitive.
     ![](images/glue-create-job-3.png)
 
-1. Click the **+** button again to create another node. Under **Targets** choose `Snowflake`. Choose the Snowflake connection you created previously, and fill in `xx` for database, and `xx` for schema.
+1. Click the **+** button to create another node. Under **Transforms** choose `Evaluate Data Quality`. In the **Ruleset editor**, paste the following ruleset.
+    ```
+        Rules = [
+            IsUnique "UUID",
+            ColumnValues "sales channel" in ["Offline", "Online"],
+            ColumnValues "order priority" in ["L", "M", "H", "C"],
+            CustomSql "SELECT COUNT(*) FROM primary WHERE `total revenue` != ROUND(`units sold` * `unit price`, 2)" = 0
+        ]
+    ```
+
+1. Under **Data quality transform output**, check `Original data`. Under **Data quality actions**, choose `Fail job without loading target data`. 
+    ![](images/glue-create-job-4.png)
+
+1. You should see a new node called `originalData` being added in the visual graph. Click on that node, and then click the **+** button to create another node. Under **Targets** choose `Snowflake`. Choose the Snowflake connection you created previously, and fill in `glue_db` for database, `glue_workshop` for schema, and `orders` for table.
+    ![](images/glue-create-job-5.png)
 
 1. Click **Save** and then click **Run**.
+
+## Validate the ETL job completion <a name="validate"></a>
+
+1. In the Glue visual ETL console, go to **Runs** tab and ensure that the job has successfully completed.
+    ![](images/glue-job-status.png)
+
+1. Navigate to **Data quality** tab to see the data quality results from the ETL job. You can optionally download the DQ results.
+    ![](images/glue-dq-results.png)
+
+1. Navigate back to Snowflake Snowsight UI. In the same worksheet, or in a new worksheet, run the following SQL commands to validate that a new table `orders` is created in the `glue_db.glue_workshop` schema, with the profit-related columns dropped.
+
+    ```sql
+    SELECT * from glue_workshop.orders LIMIT 50;
+    SELECT COUNT(*) from glue_workshop.orders;
+    ```
+
+Congratulations! You have successfully created AWS Glue native Snowflake connector and used it to do a simple ETL job to load data into Snowflake.
