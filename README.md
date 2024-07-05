@@ -71,6 +71,7 @@ Follow the below steps to complete the setup:
 1. The Glue Studio window will appear. Go to **Job details** tab, and fill in the following parameters:
     - Name: `glue-snowflake-etl`
     - IAM Role: choose the pre-created IAM role (it should be named `AWSGlueServiceRole-glueworkshop`)
+    
     Leave the rest as default.
     ![](images/glue-create-job-1.png)
 
