@@ -3,16 +3,16 @@
 This repository contains step-by-step guide on how to set-up AWS Glue connector for Snowflake and a sample ETL job that uses this connector.
 
 ## Table of contents
-1. [Pre-requisites](#prereq)
-1. [Snowflake Set-up](#snowflake-setup)
+1. [Pre-requisites](#pre-requisites)
+1. [Snowflake Set-up](#snowflake-set-up)
 1. [AWS Set-up](#aws-setup)
-1. [Validate the ETL job completion](#validate)
+1. [Validate the ETL job completion](#validate-the-etl-job-completion)
 
-## Pre-requisites: <a name="prereq"></a>
+## Pre-requisites
 
 Complete Lab 01: Working with Glue Data Catalog > Using AWS Console from [Glue Immersion Day workshop](https://catalog.us-east-1.prod.workshops.aws/workshops/ee59d21b-4cb8-4b3d-a629-24537cf37bb5/en-US). This lab assumes that the Glue table `console_csv` in Glue database `console_glueworkshop` are present in your AWS account.
 
-## Snowflake Set-up <a name="snowflake-setup"></a>
+## Snowflake Set-up
 
 In a new browser tab, go to http://signup.snowflake.com/ and sign-up for a new account. Ensure that you choose **Enterprise** for the "Choose your Snowflake edition" question and **AWS** for the "Choose your cloud provider" question.
 
@@ -28,7 +28,7 @@ Follow the below steps to complete the setup:
 
     ![](images/snowflake-account-url.png)
 
-## AWS Set-up <a name="aws-setup"></a>
+## AWS Set-up
 
 ### Create a secret in AWS Secrets Manager
 
@@ -98,7 +98,7 @@ Follow the below steps to complete the setup:
 
 1. Click **Save** and then click **Run**.
 
-## Validate the ETL job completion <a name="validate"></a>
+## Validate the ETL job completion
 
 1. In the Glue visual ETL console, go to **Runs** tab and ensure that the job has successfully completed.
     ![](images/glue-job-status.png)
