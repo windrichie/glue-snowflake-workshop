@@ -1,1 +1,10 @@
-AWS GLUE & SNOWPARK Integration - Working in Dataframes 
+# AWS GLUE & SNOWPARK Integration - Working with Dataframes 
+
+## Pre requisites
+Snowflake credentials setup in AWS Secrets
+Permissions to work in Glue, S3 
+Download Snowpark .whl file 
+  https://pypi.org/project/snowflake-snowpark-python/
+
+### 
+
