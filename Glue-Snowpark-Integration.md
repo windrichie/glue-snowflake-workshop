@@ -4,7 +4,8 @@
 
 1. **Snowflake credentials setup in AWS Secrets**
 
-2. Permissions to work in Glue, S3 (IAM Role with policy)
+2. **Permissions to work in Glue, S3 (IAM Role with policy)**
+
    AmazonS3FullAccess
    AWSGlueConsoleFullAccess
    AWSGlueServiceRole
