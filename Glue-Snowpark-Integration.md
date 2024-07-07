@@ -3,6 +3,7 @@
 **Prerequisites**
 
 1. Snowflake credentials setup in AWS Secrets
+
 2. Permissions to work in Glue, S3 (IAM Role with policy)
    AmazonS3FullAccess
    AWSGlueConsoleFullAccess
@@ -63,18 +64,25 @@ SELECT src:dealership, src:salesperson.name, src:vehicle[0].make
 2. Download Snowpark from the below link.
 
    [Snowpark Download Link](https://pypi.org/project/snowflake-snowpark-python/)
+
    Click on distribution and download the .whl file
+
    ![Snowpark distribution](images/snowparkDownload.png)
 
 3. Create a bucket in S3, upload the .whl file and copy the S3 URI.
+
    ![S3 Bucket](images/snowparkFileinS3Bucket.png)
+
 4. In AWS Glue click under ETL jobs, click on Script Editor.
+
    ![Glue ETL Scrip Editor](images/GlueStudio-ScriptEditor-1.png)
 
    Under Engine options choose Python Shell.
+
    ![Glue ETL Python Shell](images/GlueStudio-ScriptEditor-2.png)
 
    Under Job details, enter job name and in Advanced properties, Python Library path paste the S3 File URI copied in step 1.
+
    ![Advanced Properties Python Library](images/JobDetailsAdvancedProp.png)
 
 5. Click on the Script Tab, copy and paste the below code. Click Save and Run the job.
@@ -147,6 +155,7 @@ session.close()
 6. Once the job is running, click on Runs tab to monitor the status for erros.
    Under Run Detials, Click on Output Logs and click on the cloud watch log group:
    On Successfull run the last line for the log should display data frame and flatten outputs shown below
+
    ![Cloud Watch Output Logs](images/CloudWatchOutputLog.png)
 
 ### This Concludes setup and working using Snowpark in AWS Glue
