@@ -3,13 +3,15 @@
 ### Prerequisites
 
 1. **Snowflake credentials setup in AWS Secrets**
+  If you have already created a secret for Snowflake connection, you can use the same secret.
 
 2. **Permissions to work in Glue, S3 (IAM Role with policy)**
+  If you are using the default `AWSGlueServiceRole-glueworkshop`, the necessary permissions should already be provided.
 
-   AmazonS3FullAccess
-   AWSGlueConsoleFullAccess
-   AWSGlueServiceRole
-   SecretsManagerReadWrite
+   > AmazonS3FullAccess
+   > AWSGlueConsoleFullAccess
+   > AWSGlueServiceRole
+   > SecretsManagerReadWrite
 
 ### Step by Step instruction to setup Snowpark in AWS Glue
 
@@ -55,6 +57,12 @@ FROM VALUES
     ]
 }') v;
 
+-- Grant minimum required permissions to the role
+GRANT USAGE ON DATABASE SNOWPARK_DEMO TO ROLE glue_de_role;
+GRANT USAGE ON SCHEMA SNOWPARK_DEMO.PUBLIC TO ROLE glue_de_role;
+GRANT CREATE TABLE ON SCHEMA SNOWPARK_DEMO.PUBLIC TO ROLE glue_de_role;
+GRANT SELECT ON TABLE PUBLIC.CAR_SALES TO ROLE glue_de_role;
+
 SELECT * FROM car_sales;
 
 SELECT src:dealership, src:salesperson.name, src:vehicle[0].make
@@ -70,7 +78,7 @@ SELECT src:dealership, src:salesperson.name, src:vehicle[0].make
 
    ![Snowpark distribution](images/snowparkDownload.png)
 
-3. **Create a bucket in S3, upload the .whl file and copy the S3 URI.**
+3. **Use the existing `glueworkshop` S3 bucket, upload the .whl file and copy the S3 URI.**
 
    ![S3 Bucket](images/snowparkFileinS3Bucket.png)
 
@@ -98,22 +106,21 @@ from snowflake.snowpark.functions import col
 import boto3
 
 client = boto3.client("secretsmanager")
-secret_response = client.get_secret_value(SecretId='snowflake_mluser')
+secret_response = client.get_secret_value(SecretId='glue-snowflake-secret')
 snowflake_details = json.loads(secret_response['SecretString'])
 
 connection_parameters = {
-    "account": "jv48226.ap-southeast-1",
+    "account": "<account url in the format of XXXXXXX.AWS_REGION>",
     "user": snowflake_details['sfUser'],
     "password": snowflake_details['sfPassword'],
-    "role": "ML_ROLE",  # optional
+    "role": "glue_de_role",  # optional
     "warehouse": snowflake_details['sfWarehouse'],  # optional
-    "database": "ML_LENDER_DATA",  # optional
+    "database": "SNOWPARK_DEMO",  # optional
     "schema": "PUBLIC",  # optional
 }
 
 session = Session.builder.configs(connection_parameters).create()
 # SQL
-session.sql("create database if not exists snowpark_demo").collect()
 session.sql("use database snowpark_demo").collect()
 session.sql("use schema snowpark_demo.public").collect()
 session.sql('CREATE OR REPLACE TABLE sample_product_data (id INT, parent_id INT, category_id INT, name VARCHAR, serial_number VARCHAR, key INT, "3rd" INT)').collect()
