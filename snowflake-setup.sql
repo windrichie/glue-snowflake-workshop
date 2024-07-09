@@ -34,3 +34,6 @@ CREATE USER glue_de_user
   DEFAULT_WAREHOUSE = glue_de_wh
   COMMENT = 'User for AWS Glue workloads';
 GRANT ROLE glue_de_role TO USER glue_de_user;
+
+-- Grant role access to accountadmin which will be used for validation stage
+GRANT ROLE glue_de_role TO ROLE accountadmin;

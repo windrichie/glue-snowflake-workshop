@@ -94,7 +94,7 @@ Follow the below steps to complete the setup:
 1. Under **Data quality transform output**, check `Original data`. Under **Data quality actions**, choose `Fail job without loading target data`. 
     ![](images/glue-create-job-4.png)
 
-1. You should see a new node called `originalData` being added in the visual graph. Click on that node, and then click the **+** button to create another node. Under **Targets** choose `Snowflake`. Choose the Snowflake connection you created previously, and fill in `glue_db` for database, `glue_workshop` for schema, and `orders` for table.
+1. You should see a new node called `originalData` being added in the visual graph. Click on that node, and then click the **+** button to create another node. Under **Targets** choose `Snowflake`. Choose the Snowflake connection you created previously `Snowflake connection`, and fill in `glue_db` for database, `glue_workshop` for schema, and `orders` for table.
     ![](images/glue-create-job-5.png)
 
 1. Click **Save** and then click **Run**.
