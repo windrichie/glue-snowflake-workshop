@@ -94,7 +94,7 @@ SELECT src:dealership, src:salesperson.name, src:vehicle[0].make
 
    ![Advanced Properties Python Library](images/JobDetailsAdvancedProp.png)
 
-5. **Click on the Script Tab, copy and paste the below code. Click Save and Run the job.**
+5. **Click on the Script Tab, copy and paste the below code. Replace the value of connection_parameters['account'] with your Snowflake account URL. Click Save and Run the job.**
 
 ```python
 import os
