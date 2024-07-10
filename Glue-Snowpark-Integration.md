@@ -3,10 +3,10 @@
 ### Prerequisites
 
 1. **Snowflake credentials setup in AWS Secrets**
-  If you have already created a secret for Snowflake connection, you can use the same secret.
+   If you have already created a secret for Snowflake connection, you can use the same secret.
 
 2. **Permissions to work in Glue, S3 (IAM Role with policy)**
-  If you are using the default `AWSGlueServiceRole-glueworkshop`, the necessary permissions should already be provided.
+   If you are using the default `AWSGlueServiceRole-glueworkshop`, the necessary permissions should already be provided.
 
    > AmazonS3FullAccess
    > AWSGlueConsoleFullAccess
@@ -90,11 +90,11 @@ SELECT src:dealership, src:salesperson.name, src:vehicle[0].make
 
    ![Glue ETL Python Shell](images/GlueStudio-ScriptEditor-2.png)
 
-   **Under Job details, enter job name and in Advanced properties, Python Library path paste the S3 File URI copied in step 1.**
+   **Under Job details, enter job name ex: "snowpark_connection", under IAM role choose "AWSGlueServiceRole-glueworkshop" from drop down and in Advanced properties, under Python Library path paste the S3 File URI copied in step 1. Click Save**
 
    ![Advanced Properties Python Library](images/JobDetailsAdvancedProp.png)
 
-5. **Click on the Script Tab, copy and paste the below code. Replace the value of connection_parameters['account'] with your Snowflake account URL. Click Save and Run the job.**
+5. **Click on the Script Tab, copy and paste the below code. Replace the value of connection_parameters['account'] with your Snowflake account URL ex: "xy12345.ap-southeast-1". Click Save and Run the job.**
 
 ```python
 import os
